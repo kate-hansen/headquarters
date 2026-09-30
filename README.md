@@ -22,4 +22,38 @@ Then run `/hq-setup` once on your machine, and `/hq-init` inside each project yo
 | `handoff` | you | Writes a dated handoff for the current story so a fresh session can continue. |
 | `pickup` | you | Reads a story's handoff trail and briefs you before resuming. |
 
-The skills form part of a story workflow: **fresh → working → in review → closed**. `/pickup` and `/handoff` move between fresh and working; review, start, and finish skills are planned.
+## Workflow
+
+Working on a user story moves through four states. Each transition is a skill, or an action you take yourself.
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Fresh
+    Fresh --> Working: /start (new story)<br/>/pickup (has a handoff)
+    Working --> Fresh: /handoff
+    Working --> InReview: /review
+    InReview --> Working: course-correct<br/>or commit, next slice
+    Working --> Closed: /finish
+    Closed --> [*]
+
+    InReview: In review
+```
+
+| State | What's happening |
+|---|---|
+| **Fresh** | A new session with no context loaded. |
+| **Working** | The agent is oriented on the story and building. |
+| **In review** | The agent has reported what it did and why, and waits for you. |
+| **Closed** | The agent's work on the story is done; lessons are promoted and the final record is written. |
+
+| Transition | Skill | What it does |
+|---|---|---|
+| Fresh → Working | `/start` *(planned)* | Begins a new story: sets up its headquarters folder and analyzes the story. |
+| Fresh → Working | `/pickup` | Resumes from the story's handoff trail and briefs you first. |
+| Working → Fresh | `/handoff` | Captures the session so a fresh one can continue with a clear head. |
+| Working → In review | `/review` *(planned)* | Reports what was done and why, linking files and lines. |
+| In review → Working | you | Course-correct, or commit and move on to the next slice. |
+| Working → Closed | `/finish` *(planned)* | Promotes lessons and writes the story's final record. |
+
+Nothing stores the current state: it's worked out from what's in the story's headquarters folder and from the conversation. These states are separate from your tracker's story statuses, which change only when you ask.
