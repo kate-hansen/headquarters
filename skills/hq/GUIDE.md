@@ -1,6 +1,8 @@
 # Headquarters guide
 
-Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, and handoffs. Every headquarters skill (`hq`, `hq-init`, `handoff`, `pickup`) follows this guide.
+Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, and handoffs. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`) follows this guide.
+
+If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it out and suggest `/hq-setup`.
 
 ## Layout
 
