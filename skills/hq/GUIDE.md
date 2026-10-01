@@ -1,6 +1,6 @@
 # Headquarters guide
 
-Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, handoffs, and review reports. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`, `review`) follows this guide.
+Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, handoffs, and review reports. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`, `review`) follows this guide. Pages written for the user to read follow `hq-artifact-design`.
 
 If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it out and suggest `/hq-setup`.
 
@@ -15,6 +15,7 @@ If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it 
       notes.md                   story-level memory that isn't a handoff
       handoffs/YYYY-MM-DD-HHMM-<slug>.md
       reviews/YYYY-MM-DD-HHMM-<slug>/index.html   plus assets/ for screenshots
+      reports/YYYY-MM-DD-HHMM-<slug>/index.html   other reports, such as analyses
     general/                     work that belongs to no story
       handoffs/...
       reviews/...
@@ -63,6 +64,7 @@ When something fits two places, write it once in the more shared place and link 
 - **Reference over repetition.** Link specs, story files, ADRs, commits, and files by path instead of copying them.
 - **No secrets.** Redact API keys, passwords, tokens, connection strings, and personal information.
 - **Report every write.** After writing to headquarters or a story file, tell the user what changed and where: "Saved to `earthley/project.md`: the build runs from `src/`." When fixing stale memory, call the fix out explicitly with the old and new claim, so the user can course-correct.
+- **Reports stay in headquarters.** Every report (reviews, analyses, any other page written for the user) is a file in the project's headquarters folder, handed to the user by its local path, and kept local even when the harness can publish pages elsewhere.
 - **The user commits.** Leave all git commits and pushes to the user, who reviews work first.
 
 ## Workflow states

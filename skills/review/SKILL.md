@@ -37,7 +37,7 @@ Then note what was verified (each check with its result) and how, and write the 
 
 The page derives state chips from this data: *look closely* from `attention`, *untested* from a section with no tests, *finding* from code-review findings, and *caveat* from caveats tied to the section. Fill those fields faithfully and the risk shows at a glance.
 
-**Write the copy plainly.** Short direct sentences in active voice, naming things the way the user knows them. A section title states the behaviour ("Pages no longer lock each other out"), and each claim under *How it's built* is one sentence. Keep to plain statements: no asides set off by dashes, no "not X, but Y" framing, no colon-then-reveal sentences, no stock phrases.
+**Write the copy** by the rules in [../hq-artifact-design/SKILL.md](../hq-artifact-design/SKILL.md) (section 3). A section title states the behaviour ("Pages no longer lock each other out"), and each claim under *How it's built* is one sentence.
 
 ## 3. Update the story file and headquarters
 
@@ -45,7 +45,7 @@ Apply the audience test from the guide, the same way `/handoff` does: open quest
 
 ## 4. Write the report
 
-The report is always this template, so every review looks the same and can be updated in place.
+The report is always this template, so every review looks the same and can be updated in place. Changes to the template's design itself follow `hq-artifact-design`.
 
 1. Create `~/.headquarters/<project-slug>/stories/<ID>/reviews/YYYY-MM-DD-HHMM-<slug>/` (or under `general/`), using local time and a three-to-five-word slug.
 2. Copy [template.html](template.html) into it as `index.html`. Save screenshots in `assets/` beside it and reference them as `assets/<name>.png`.

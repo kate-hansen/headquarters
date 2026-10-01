@@ -21,7 +21,8 @@ Then run `/hq-setup` once on your machine, and `/hq-init` inside each project yo
 | `hq-init` | you, once per project | Interactive questionnaire that sets up or refreshes a project's `project.md`. |
 | `handoff` | you | Writes a dated handoff for the current story so a fresh session can continue. |
 | `pickup` | you | Reads a story's handoff trail and briefs you before resuming. |
-| `review` | you or the agent | When a slice is done, opens an HTML report in your browser: what changed and why, grouped by intent, with VS Code links, diffs, and a suggested commit message. |
+| `review` | you or the agent | When a slice is done, opens an HTML report in your browser: sections about behaviour in review order, risk chips, every claim linked into VS Code, short snippets, the tests that prove each section, and a suggested commit message. |
+| `hq-artifact-design` | the agent | House method for HTML pages people read: tokens, type, light/dark, layout, copy, and local-page mechanics. Our own version of the artifact-design method, used by `review` and any report an agent writes. |
 
 ## Workflow
 
