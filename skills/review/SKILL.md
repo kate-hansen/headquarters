@@ -21,8 +21,10 @@ The report lets the user review the work and the code in one pass before committ
 
 Read the full diff for the scope, and read enough of each changed file to explain it. Use the conversation for the *why*: what the user asked for, the reasoning behind each choice, anything tried and adjusted.
 
-Organise the work into **sections by behaviour**: what the system or the user now experiences ("A restart resumes only the unfinished ranges"), not which files moved. For each section:
+Organise the work into **sections by behaviour**: what the system or the user now experiences ("A restart resumes only the unfinished ranges"), not which files moved. **Order the sections by where the user's judgement matters most**: the riskiest, least verified, or most surprising first, and routine changes last. The page numbers sections in that order and says so, so the order itself tells the user where to start. For each section:
 
+- **Attention**: for the one to three sections that most need the user's eye, one sentence on exactly what to check.
+- **Size**: lines added and removed and files touched, summed from `git diff --numstat` over the section's files (count untracked files' lines as added).
 - **Body**: a short paragraph on what changed and why, in plain language.
 - **How it's built**: a list of claims, each a short sentence tied to the file and line range that carries it. Take line numbers from the new side of each diff hunk. Every changed code file appears under some section.
 - **Snippet**: at most one per section, 20 lines or fewer, verbatim from the file, and only when the lines themselves are the point (a condition, a query, a signature). Most sections have none; the links carry the reader to the code.
@@ -31,7 +33,11 @@ Organise the work into **sections by behaviour**: what the system or the user no
 
 Story and tracker files go in **Also changed**, not in a section. Changes that serve another goal (a bug fixed along the way, a rename, a dependency bump) go in **side changes**, so nothing slips in unnoticed.
 
-Then note what was verified (each check with its result) and how, and write the **caveats**: the conditions behind that evidence and how far it can be trusted (local data only, a path that couldn't be exercised, an assumption about an external API). Where the slice moved something measurable (test counts, timings, sizes), record it as a before/after number. Pick the one to three spots where the user's judgement matters most.
+Then note what was verified (each check with its result) and how, and write the **caveats**: the conditions behind that evidence and how far it can be trusted (local data only, a path that couldn't be exercised, an assumption about an external API). Tie each caveat to the section it qualifies when it has one. Where the slice moved something measurable (test counts, timings, sizes), record it as a before/after number.
+
+The page derives state chips from this data: *look closely* from `attention`, *untested* from a section with no tests, *finding* from code-review findings, and *caveat* from caveats tied to the section. Fill those fields faithfully and the risk shows at a glance.
+
+**Write the copy plainly.** Short direct sentences in active voice, naming things the way the user knows them. A section title states the behaviour ("Pages no longer lock each other out"), and each claim under *How it's built* is one sentence. Keep to plain statements: no asides set off by dashes, no "not X, but Y" framing, no colon-then-reveal sentences, no stock phrases.
 
 ## 3. Update the story file and headquarters
 
@@ -54,12 +60,11 @@ The data uses the same shape as the template's example:
 | `checkedHow` | One line on how the work was checked: tools, environment, data. |
 | `summary` | Two or three plain sentences: what changed and why. |
 | `kpis[]` | Optional, only for measurable change: `label`, `value`, `from`, `delta`. |
-| `lookClosely[]` | `text`, plus optional `path`, `line`, `endLine`. |
-| `sections[]` | `title`, `body`, `points[]` (`text`, `path` absolute, `line`, optional `endLine`), optional `snippet` (`path`, `line` of its first line, `code`), `tests[]` (`text`, `path`, optional `line`), optional `images[]` (`src`, `caption`, `tag`: `before` or `after`, optional `wide`), and optional `review`. |
+| `sections[]` | In review order: `title`, optional `attention`, `size` (`added`, `removed`, `files`), `body`, `points[]` (`text`, `path` absolute, `line`, optional `endLine`), optional `snippet` (`path`, `line` of its first line, `code`), `tests[]` (`text`, `path`, optional `line`), optional `images[]` (`src`, `caption`, `tag`: `before` or `after`, optional `wide`), and optional `review`. |
 | `sideChanges[]` | `text`, `path`, optional `line`. |
 | `decisions[]` | `text` ("We chose X because Y") and `links[]` (`label`, `href`) to any ADRs. |
 | `verified[]` | Each check that was run, with its result. |
-| `caveats[]` | The limits of that evidence. |
+| `caveats[]` | The limits of that evidence: `text`, plus `section` (its 1-based number) when it qualifies one section. |
 | `alsoChanged[]` | `path` and `note` for each story-file, tracker, or headquarters edit. |
 | `commitMessage` | A suggested message matching the repo's style in `git log`, with the story ID when the repo uses one. |
 

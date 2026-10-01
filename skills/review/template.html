@@ -2,81 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
+  /* Layout: an inspection sheet. A sticky review bar (sections in review order, state chips, progress)
+     sits over a single reading column; sections are divided by rules, and only code and the
+     commit message get a filled surface. */
   :root {
-    --bg: #f6f5f1; --surface: #ffffff; --text: #1d1f1b; --muted: #62655e; --border: #dfddd5;
-    --accent: #2f6fde; --heading: #2d4a22; --good: #2e7d32; --warn: #b26a00;
-    --code-bg: #f3f2ee; --lineno: #a3a59d; --tag-before: #ece7dc; --tag-before-text: #5b5448;
-    --tag-after: #e1ecd6; --tag-after-text: #2d4a22; --callout: #c9a227;
+    --bg: #f5f6f8; --fg: #1b1f27; --muted: #5d6573; --rule: #d9dde4; --surface: #eaedf2;
+    --accent: #2f56c4; --good: #2b7a3d; --warn: #9a5b00; --warn-bg: #fbefd9; --bad: #b3261e; --bad-bg: #fbe3e1;
+    --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #151614; --surface: #1e201d; --text: #e7e8e3; --muted: #9da097; --border: #34372f;
-      --accent: #7aa7ff; --heading: #b9dc8f; --good: #6fcf7a; --warn: #f0b45a;
-      --code-bg: #252722; --lineno: #6b6e66; --tag-before: #37332b; --tag-before-text: #d4cbb8;
-      --tag-after: #2a3a22; --tag-after-text: #b9dc8f; --callout: #c9a227;
+    :root:not([data-theme="light"]) {
+      --bg: #14171c; --fg: #e4e7ec; --muted: #9aa2b0; --rule: #2c323c; --surface: #1d2229;
+      --accent: #8eaaff; --good: #6fcf86; --warn: #f0b45a; --warn-bg: #3a2c12; --bad: #f28b82; --bad-bg: #3b1d1b;
+      color-scheme: dark;
     }
   }
+  :root[data-theme="dark"] {
+    --bg: #14171c; --fg: #e4e7ec; --muted: #9aa2b0; --rule: #2c323c; --surface: #1d2229;
+    --accent: #8eaaff; --good: #6fcf86; --warn: #f0b45a; --warn-bg: #3a2c12; --bad: #f28b82; --bad-bg: #3b1d1b;
+    color-scheme: dark;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 15.5px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 72px; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--font-body); padding-inline: 16px; }
+  main { max-width: 920px; margin: 0 auto; padding-block: 28px 80px; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  code, pre { font: 13px/1.5 ui-monospace, "Cascadia Code", Consolas, monospace; }
-  h1 { font-size: clamp(24px, 4vw, 32px); line-height: 1.2; margin: 0 0 6px; color: var(--heading); }
-  h2 { font-size: 20px; line-height: 1.3; margin: 0; color: var(--heading); }
-  h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 6px; }
-  p { margin: 0 0 10px; }
-  .meta { color: var(--muted); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
-  .checked-how { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
-  .summary { font-size: 16.5px; margin: 16px 0 0; }
-  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 16px; }
-  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
-  .kpi .label { font-size: 13px; color: var(--muted); }
-  .kpi .value { font-size: 21px; font-weight: 700; margin: 2px 0; font-variant-numeric: tabular-nums; }
-  .kpi .from { color: var(--muted); font-weight: 500; font-size: 14px; }
-  .kpi .delta { font-size: 13px; color: var(--good); font-weight: 600; }
-  nav.toc { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; margin: 18px 0 4px; }
-  section.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; margin: 16px 0; }
-  section.card.reviewed { opacity: .6; }
-  .sec-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
-  label.check { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; white-space: nowrap; cursor: pointer; }
-  label.check input { accent-color: var(--good); }
-  .pair { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; margin: 12px 0 4px; }
-  figure { margin: 0; min-width: 0; flex: 1 1 280px; max-width: 480px; }
-  figure.wide { max-width: none; flex-basis: 100%; }
-  figcaption { font-size: 13.5px; color: var(--muted); margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; }
-  .tag { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 9px; border-radius: 999px; }
-  .tag.before { background: var(--tag-before); color: var(--tag-before-text); }
-  .tag.after { background: var(--tag-after); color: var(--tag-after-text); }
+  a:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  code, pre { font-family: var(--font-mono); font-size: 13.5px; }
+  h1, h2 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(26px, 4.5vw, 34px); line-height: 1.15; }
+  h2 { font-size: 21px; line-height: 1.25; }
+  .label { font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  p { margin: 0; }
+  .prose { max-width: 68ch; }
+  header, section.change, section.tail, .group { grid-template-columns: minmax(0, 1fr); }
+
+  /* Header */
+  header { display: grid; gap: 10px; }
+  .meta { color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 2px 16px; }
+  .meta > * { min-width: 0; overflow-wrap: anywhere; }
+  .summary { font-size: 18px; line-height: 1.55; }
+  .checked-how { color: var(--muted); font-size: 14px; }
+  .kpis { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 4px; }
+  .kpi .value { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kpi .from { color: var(--muted); font-size: 14px; }
+  .kpi .delta { color: var(--good); font-size: 13.5px; }
+  .commit-line { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+  .commit-line code { min-width: 0; overflow-wrap: anywhere; }
+
+  /* Review bar */
+  nav.bar { z-index: 2; background: var(--bg); border-block: 1px solid var(--rule); margin: 22px 0 6px; padding-block: 8px; }
+  nav.bar ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: none; }
+  nav.bar li { display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; font-size: 14px; min-width: 0; }
+  nav.bar li.done a { color: var(--muted); text-decoration: line-through; }
+  nav.bar .n { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; flex: 0 0 auto; width: 2ch; text-align: right; }
+  nav.bar a { flex: 1 1 14ch; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  nav.bar .chips { flex: 0 0 auto; display: flex; gap: 4px; }
+  .bar-foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .chip { font-size: 11.5px; font-weight: 600; letter-spacing: .03em; border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+  .chip.warn { background: var(--warn-bg); color: var(--warn); }
+  .chip.bad { background: var(--bad-bg); color: var(--bad); }
+  .chip.size { font-family: var(--font-mono); font-weight: 500; color: var(--muted); padding-inline: 0; }
+  .add { color: var(--good); } .del { color: var(--bad); }
+
+  /* Sections */
+  section.change, section.tail { border-top: 1px solid var(--rule); padding-block: 26px; display: grid; gap: 12px; scroll-margin-top: 140px; }
+  section.change.done { opacity: .55; }
+  .sec-head { display: flex; gap: 14px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+  .sec-title { display: flex; gap: 10px; align-items: baseline; min-width: 0; }
+  .sec-title .n { font-family: var(--font-mono); color: var(--muted); font-size: 15px; }
+  .sec-tools { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  label.check { font-size: 13.5px; color: var(--muted); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  label.check input { accent-color: var(--good); width: 16px; height: 16px; }
+  .attention { background: var(--warn-bg); color: var(--fg); border-radius: 6px; padding: 8px 12px; font-size: 15px; }
+  .attention strong { color: var(--warn); }
+  .group { display: grid; gap: 4px; }
   ul.points { list-style: none; margin: 0; padding: 0; }
-  ul.points li { display: flex; gap: 10px; align-items: baseline; padding: 5px 0; border-bottom: 1px dashed var(--border); }
+  ul.points li { display: flex; flex-wrap: wrap; gap: 2px 16px; align-items: baseline; justify-content: space-between; padding-block: 5px; border-bottom: 1px dotted var(--rule); }
   ul.points li:last-child { border-bottom: 0; }
-  ul.points .text { flex: 1; }
-  ul.points .where { flex: 0 1 auto; text-align: right; overflow-wrap: anywhere; font-size: 13px; }
-  .snippet { margin-top: 10px; border-radius: 8px; background: var(--code-bg); overflow: hidden; }
-  .snippet .head { font-size: 12.5px; padding: 6px 12px; border-bottom: 1px solid var(--border); color: var(--muted); }
-  .snippet pre { margin: 0; padding: 8px 0; overflow-x: auto; }
-  .snippet .ln { display: block; padding: 0 12px; white-space: pre; }
-  .snippet .ln::before { content: attr(data-n); display: inline-block; width: 3.2em; color: var(--lineno); user-select: none; }
-  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; font-size: 13px; }
-  .badge { border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
-  .badge.ok { color: var(--good); } .badge.issue { color: var(--warn); }
-  ul.findings { margin: 6px 0 0; padding-left: 20px; font-size: 14px; }
-  ul.plain { margin: 0; padding-left: 20px; }
-  ul.plain li { margin: 5px 0; }
-  .callout { border-left: 4px solid var(--callout); }
+  ul.points .text { flex: 1 1 22ch; min-width: 0; }
+  ul.points .where { flex: 0 1 auto; min-width: 0; overflow-wrap: anywhere; font-size: 13px; }
+  .snippet { background: var(--surface); border-radius: 6px; overflow: hidden; }
+  .snippet .head { font-size: 12.5px; padding: 6px 12px; border-bottom: 1px solid var(--rule); }
+  .snippet pre { margin: 0; padding-block: 8px; overflow-x: auto; }
+  .snippet .ln { display: block; padding-inline: 12px; white-space: pre; }
+  .snippet .ln::before { content: attr(data-n); display: inline-block; width: 3.4em; color: var(--muted); user-select: none; }
+  .pair { display: flex; flex-wrap: wrap; gap: 20px; }
+  figure { margin: 0; flex: 1 1 260px; min-width: 0; max-width: 100%; }
+  figure.wide { flex-basis: 100%; }
+  figcaption { font-size: 13.5px; color: var(--muted); margin-bottom: 6px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 4px; }
+  .tag { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .tag.after { color: var(--good); }
+  .review-line { font-size: 14px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .ok { color: var(--good); } .issue { color: var(--warn); }
+  ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+  .caveat-ref { font-size: 13px; color: var(--muted); margin-left: 6px; }
   .commit { position: relative; }
-  .commit pre { margin: 0; white-space: pre-wrap; background: var(--code-bg); border-radius: 8px; padding: 12px 14px; }
-  button.copy { position: absolute; top: 8px; right: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
-  .progress { color: var(--muted); font-size: 13px; }
-  @media print {
-    body { background: #fff; } section.card { break-inside: avoid; }
-    nav.toc, label.check, button.copy { display: none; }
-  }
+  .commit pre { margin: 0; white-space: pre-wrap; background: var(--surface); border-radius: 6px; padding: 12px 14px; padding-right: 72px; }
+  button.copy { position: absolute; top: 8px; right: 8px; font: 600 12px var(--font-body); color: var(--fg); background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+  button.copy.inline { position: static; }
+  @media (min-width: 720px) { nav.bar ol { grid-template-columns: 1fr 1fr; column-gap: 28px; } }
+  @media (min-width: 720px) and (min-height: 720px) { nav.bar { position: sticky; top: env(safe-area-inset-top, 0px); } }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+  @media print { nav.bar { position: static; } label.check, button.copy { display: none; } section { break-inside: avoid; } }
 </style>
 </head>
 <body>
@@ -88,7 +125,7 @@
 -->
 <script type="application/json" id="report-data">
 {
-  "title": "Example: drag to reorder inventory slots",
+  "title": "Drag to reorder inventory slots",
   "project": "example-project",
   "story": { "id": "EX-004", "title": "Reorder inventory slots", "path": "C:/src/example/project/stories/in-progress/EX-004-reorder-inventory-slots.md" },
   "repo": "C:/src/example",
@@ -96,30 +133,37 @@
   "branch": "feat/EX-004-reorder-inventory-slots",
   "scope": "Uncommitted changes against HEAD (a1b2c3d)",
   "checkedHow": "Edit-mode tests in Unity 6, plus manual drags in the Play-mode inventory scene at 1920 × 1080.",
-  "summary": "Slots can now be dragged to reorder. Drag state moved into the grid, which owns the layout, so slots only raise events.",
+  "summary": "Slots can now be dragged to reorder. The grid owns the drag because it knows every slot's position, so slots only raise events.",
   "kpis": [ { "label": "Inventory tests", "value": "12 passing", "from": "9", "delta": "+3 for reorder" } ],
-  "lookClosely": [ { "text": "Drop index math when dragging past the last slot.", "path": "C:/src/example/src/InventoryGrid.cs", "line": 71 } ],
   "sections": [
     {
+      "title": "Dropping past the last slot appends",
+      "attention": "The drop index is clamped by hand. Check the off-by-one when the grid is full.",
+      "size": { "added": 18, "removed": 4, "files": 1 },
+      "body": "A drop below the last slot used to throw. It now appends the item at the end of the grid.",
+      "points": [ { "text": "The drop index is clamped to the slot count", "path": "C:/src/example/src/InventoryGrid.cs", "line": 71, "endLine": 79 } ],
+      "snippet": { "path": "C:/src/example/src/InventoryGrid.cs", "line": 71, "code": "var index = Mathf.Clamp(target, 0, slots.Count);\nslots.Insert(index, dragged);" }
+    },
+    {
       "title": "Drag a slot to reorder it",
-      "body": "Dragging a slot now lifts it and shows a gap where it will land. The grid owns the drag, because it already knows every slot's position; slots only report that a drag started or ended.",
+      "size": { "added": 96, "removed": 21, "files": 2 },
+      "body": "Dragging a slot lifts it and opens a gap where it will land. Slots report when a drag starts and ends, and the grid moves them.",
       "images": [
         { "src": "assets/before.png", "caption": "Slots fixed in place", "tag": "before" },
-        { "src": "assets/after.png", "caption": "Gap opens under the dragged slot", "tag": "after" }
+        { "src": "assets/after.png", "caption": "A gap opens under the dragged slot", "tag": "after" }
       ],
       "points": [
         { "text": "The grid handles drag and drop for every slot", "path": "C:/src/example/src/InventoryGrid.cs", "line": 42, "endLine": 88 },
         { "text": "Slots raise events instead of moving themselves", "path": "C:/src/example/src/Slot.cs", "line": 15 }
       ],
-      "snippet": { "path": "C:/src/example/src/Slot.cs", "line": 15, "code": "public event Action<int> DragStarted;\npublic event Action<int> Dropped;" },
-      "tests": [ { "text": "Dropping past the last slot appends", "path": "C:/src/example/tests/InventoryGridTests.cs", "line": 30 } ],
+      "tests": [ { "text": "Reordering keeps every item", "path": "C:/src/example/tests/InventoryGridTests.cs", "line": 30 } ],
       "review": { "standards": "ok", "spec": "ok", "findings": [] }
     }
   ],
-  "sideChanges": [ { "text": "Fixed slot indices starting at 1 in the debug overlay.", "path": "C:/src/example/src/DebugOverlay.cs", "line": 30 } ],
+  "sideChanges": [ { "text": "The debug overlay numbers slots from 0, matching the grid.", "path": "C:/src/example/src/DebugOverlay.cs", "line": 30 } ],
   "decisions": [ { "text": "We chose events over a shared drag manager because only the grid consumes them.", "links": [] } ],
-  "verified": ["Edit-mode tests pass (12/12)", "Manual drag across all 20 slots"],
-  "caveats": ["Touch drag not checked: no touch device in the editor."],
+  "verified": ["Edit-mode tests pass (12/12).", "Manual drag across all 20 slots."],
+  "caveats": [ { "text": "Touch drag is unchecked: the editor has no touch input.", "section": 2 } ],
   "alsoChanged": [ { "path": "C:/src/example/project/stories/in-progress/EX-004-reorder-inventory-slots.md", "note": "Added a Work History row and one open question" } ],
   "commitMessage": "feat(EX-004): drag to reorder inventory slots\n\nMove drag state into InventoryGrid; slots raise DragStarted/Dropped."
 }
@@ -129,6 +173,8 @@
 (function () {
   var data = JSON.parse(document.getElementById("report-data").textContent);
   var app = document.getElementById("app");
+  var sections = data.sections || [];
+  var caveats = (data.caveats || []).map(function (c) { return typeof c === "string" ? { text: c } : c; });
   var storeKey = "review:" + (data.project || "") + ":" + (data.story && data.story.id || "") + ":" + (data.datetime || "");
 
   function el(tag, attrs, children) {
@@ -142,16 +188,16 @@
     return node;
   }
   function add(node) { if (node) app.appendChild(node); }
+  function put(parent, node) { if (node) parent.appendChild(node); }
   function norm(p) { return String(p || "").replace(/\\/g, "/"); }
   function relPath(p) {
     var path = norm(p), repo = norm(data.repo).replace(/\/$/, "");
     if (repo && path.toLowerCase().indexOf(repo.toLowerCase() + "/") === 0) return path.slice(repo.length + 1);
     return path;
   }
-  function shortName(p) { return relPath(p).split("/").pop(); }
   function vscodeLink(path, line, endLine, label) {
     var href = "vscode://file/" + norm(path).replace(/^\//, "") + (line ? ":" + line : "");
-    var text = label || (shortName(path) + (line ? ":" + line + (endLine ? "-" + endLine : "") : ""));
+    var text = label || (relPath(path).split("/").pop() + (line ? ":" + line + (endLine ? "-" + endLine : "") : ""));
     return el("a", { href: href, title: relPath(path) + (line ? ":" + line : "") }, [el("code", { text: text })]);
   }
   function loadChecks() { try { return JSON.parse(localStorage.getItem(storeKey) || "{}"); } catch (e) { return {}; } }
@@ -163,123 +209,151 @@
   function linked(text, path, line, endLine) {
     return [el("span", { class: "text", text: text || "" }), path ? el("span", { class: "where" }, [vscodeLink(path, line, endLine)]) : null];
   }
-  function card(id, title, body, extraClass) {
-    if (!body) return null;
-    return el("section", { class: "card" + (extraClass ? " " + extraClass : ""), id: id }, [el("h2", { text: title }), el("div", { style: "margin-top:10px" }, [body])]);
+  function group(label, body) { return body ? el("div", { class: "group" }, [el("div", { class: "label", text: label }), body]) : null; }
+  function tail(id, title, body) {
+    return body ? el("section", { class: "tail", id: id }, [el("h2", { text: title }), body]) : null;
+  }
+  function copyButton(text, extra) {
+    var btn = el("button", { class: "copy" + (extra ? " " + extra : ""), type: "button", text: "Copy" });
+    btn.addEventListener("click", function () {
+      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1500); };
+      var fallback = function () {
+        var t = el("textarea", { readonly: "" }); t.value = text; document.body.appendChild(t); t.select();
+        try { document.execCommand("copy"); done(); } catch (e) {} document.body.removeChild(t);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+    return btn;
+  }
+  function sizeChip(size) {
+    if (!size) return null;
+    return el("span", { class: "chip size" }, [
+      el("span", { class: "add", text: "+" + (size.added || 0) }), " ", el("span", { class: "del", text: "−" + (size.removed || 0) }),
+      size.files ? " · " + size.files + (size.files === 1 ? " file" : " files") : null
+    ]);
+  }
+  // State chips: what needs attention in each section, derived from its data.
+  function stateChips(s, i) {
+    var chips = [];
+    if (s.attention) chips.push(el("span", { class: "chip warn", text: "look closely" }));
+    var findings = s.review && (s.review.findings || []).length;
+    var verdictIssue = s.review && ((s.review.standards && s.review.standards !== "ok") || (s.review.spec && s.review.spec !== "ok"));
+    if (findings || verdictIssue) chips.push(el("span", { class: "chip bad", text: (findings || 1) + (findings > 1 ? " findings" : " finding") }));
+    if (!(s.tests || []).length) chips.push(el("span", { class: "chip warn", text: "untested" }));
+    var cav = caveats.filter(function (c) { return c.section === i + 1; }).length;
+    if (cav) chips.push(el("span", { class: "chip warn", text: cav + (cav > 1 ? " caveats" : " caveat") }));
+    return chips;
   }
 
   document.title = "Review: " + (data.title || "");
-  var sections = data.sections || [];
+  var checks = loadChecks();
 
-  // Header: title, meta, provenance, summary, KPIs, navigation
+  // Header: everything needed to start the review, visible at rest.
   var story = data.story || {};
-  var meta = el("div", { class: "meta" }, [
-    story.id ? (story.path ? vscodeLink(story.path, null, null, story.id + " " + (story.title || "")) : el("span", { text: story.id })) : null,
-    data.branch ? el("span", null, [el("code", { text: data.branch })]) : null,
-    data.datetime ? el("span", { text: data.datetime }) : null,
-    data.scope ? el("span", { text: data.scope }) : null
-  ]);
-  var kpis = (data.kpis || []).length ? el("div", { class: "kpis" }, data.kpis.map(function (k) {
-    return el("div", { class: "kpi" }, [
-      el("div", { class: "label", text: k.label || "" }),
-      el("div", { class: "value" }, [k.value || "", k.from ? el("span", { class: "from", text: " from " + k.from }) : null]),
-      k.delta ? el("div", { class: "delta", text: k.delta }) : null
-    ]);
-  })) : null;
-  var progress = el("span", { class: "progress" });
-  var navItems = sections.map(function (s, i) { return el("a", { href: "#s" + (i + 1), text: (i + 1) + ". " + (s.title || "Change") }); });
+  var subject = String(data.commitMessage || "").split("\n")[0];
   add(el("header", null, [
-    el("h1", { text: data.title || "Review" }), meta,
-    data.checkedHow ? el("div", { class: "checked-how", text: "How this was checked: " + data.checkedHow }) : null,
-    data.summary ? el("p", { class: "summary", text: data.summary }) : null,
-    kpis,
-    sections.length ? el("nav", { class: "toc", "aria-label": "Sections" }, navItems.concat([progress])) : null
+    el("div", { class: "label", text: "Slice review" + (story.id ? " · " + story.id : "") }),
+    el("h1", { text: data.title || "Review" }),
+    el("div", { class: "meta" }, [
+      story.path ? vscodeLink(story.path, null, null, (story.id ? story.id + " " : "") + (story.title || "")) : null,
+      data.branch ? el("span", null, [el("code", { text: data.branch })]) : null,
+      data.datetime ? el("span", { text: data.datetime }) : null,
+      data.scope ? el("span", { text: data.scope }) : null
+    ]),
+    data.summary ? el("p", { class: "summary prose", text: data.summary }) : null,
+    (data.kpis || []).length ? el("div", { class: "kpis" }, data.kpis.map(function (k) {
+      return el("div", { class: "kpi" }, [
+        el("div", { class: "label", text: k.label || "" }),
+        el("div", null, [el("span", { class: "value", text: k.value || "" }), k.from ? el("span", { class: "from", text: " from " + k.from }) : null]),
+        k.delta ? el("div", { class: "delta", text: k.delta }) : null
+      ]);
+    })) : null,
+    data.checkedHow ? el("p", { class: "checked-how prose" }, [el("span", { class: "label", text: "How it was checked " }), data.checkedHow]) : null,
+    subject ? el("div", { class: "commit-line" }, [el("span", { class: "label", text: "Commit" }), el("code", { text: subject }), el("a", { href: "#commit", text: "full message" })]) : null
   ]));
 
-  add(card("look", "Look closely at", list(data.lookClosely, function (l) { return linked(l.text, l.path, l.line, l.endLine); }, "points"), "callout"));
-
-  // Sections: behaviour first, every claim linked to the code
-  var checks = loadChecks();
+  // Review bar: sections in review order, with state chips and progress.
+  var progress = el("span");
+  var navRows = [];
+  var bar = el("nav", { class: "bar", "aria-label": "Review order" }, [
+    el("ol", null, sections.map(function (s, i) {
+      var row = el("li", { class: checks[i] ? "done" : "" }, [
+        el("span", { class: "n", text: String(i + 1) }),
+        el("a", { href: "#s" + (i + 1), text: s.title || "Change" }),
+        el("span", { class: "chips" }, stateChips(s, i))
+      ]);
+      navRows.push(row);
+      return row;
+    })),
+    el("div", { class: "bar-foot" }, [el("span", { text: "Ordered by where your judgement matters most" }), progress])
+  ]);
   function updateProgress() {
     var n = sections.filter(function (_, i) { return checks[i]; }).length;
-    progress.textContent = sections.length ? "· " + n + " of " + sections.length + " reviewed" : "";
+    progress.textContent = n + " of " + sections.length + " reviewed";
   }
+  if (sections.length) add(bar);
+
   sections.forEach(function (s, i) {
-    var box = el("input", { type: "checkbox" });
+    var box = el("input", { type: "checkbox", id: "reviewed-" + (i + 1) });
     box.checked = !!checks[i];
-    var node = el("section", { class: "card" + (box.checked ? " reviewed" : ""), id: "s" + (i + 1) });
+    var node = el("section", { class: "change" + (box.checked ? " done" : ""), id: "s" + (i + 1) });
     box.addEventListener("change", function () {
       checks[i] = box.checked; saveChecks(checks); updateProgress();
-      node.classList.toggle("reviewed", box.checked);
+      node.classList.toggle("done", box.checked);
+      navRows[i].classList.toggle("done", box.checked);
     });
-    node.appendChild(el("div", { class: "sec-head" }, [el("h2", { text: (i + 1) + ". " + (s.title || "Change") }), el("label", { class: "check" }, [box, "Reviewed"])]));
-    if (s.body) node.appendChild(el("p", { text: s.body }));
+    node.appendChild(el("div", { class: "sec-head" }, [
+      el("div", { class: "sec-title" }, [el("span", { class: "n", text: String(i + 1) }), el("h2", { text: s.title || "Change" })]),
+      el("div", { class: "sec-tools" }, [sizeChip(s.size), el("label", { class: "check", for: "reviewed-" + (i + 1) }, [box, "Reviewed"])])
+    ]));
+    if (s.attention) node.appendChild(el("p", { class: "attention prose" }, [el("strong", { text: "Look closely. " }), s.attention]));
+    if (s.body) node.appendChild(el("p", { class: "prose", text: s.body }));
 
-    if ((s.images || []).length) {
-      node.appendChild(el("div", { class: "pair" }, s.images.map(function (img) {
-        return el("figure", { class: img.wide ? "wide" : "" }, [
-          el("figcaption", null, [img.tag ? el("span", { class: "tag " + img.tag, text: img.tag }) : null, img.caption || ""]),
-          el("a", { href: img.src, target: "_blank" }, [el("img", { src: img.src, alt: img.caption || "", loading: "lazy" })])
-        ]);
-      })));
-    }
+    if ((s.images || []).length) node.appendChild(el("div", { class: "pair" }, s.images.map(function (img) {
+      return el("figure", { class: img.wide ? "wide" : "" }, [
+        el("figcaption", null, [img.tag ? el("span", { class: "tag " + img.tag, text: img.tag }) : null, img.caption || ""]),
+        el("a", { href: img.src, target: "_blank" }, [el("img", { src: img.src, alt: img.caption || "", loading: "lazy" })])
+      ]);
+    })));
 
-    if ((s.points || []).length) {
-      node.appendChild(el("h3", { text: "How it's built" }));
-      node.appendChild(list(s.points, function (p) { return linked(p.text, p.path, p.line, p.endLine); }, "points"));
-    }
+    put(node, group("How it's built", list(s.points, function (p) { return linked(p.text, p.path, p.line, p.endLine); }, "points")));
 
     if (s.snippet && s.snippet.code) {
-      var start = s.snippet.line || 1;
-      var pre = el("pre");
+      var start = s.snippet.line || 1, pre = el("pre");
       String(s.snippet.code).split("\n").forEach(function (line, j) {
         pre.appendChild(el("span", { class: "ln", "data-n": String(start + j), text: line || " " }));
       });
-      node.appendChild(el("div", { class: "snippet" }, [
-        el("div", { class: "head" }, [s.snippet.path ? vscodeLink(s.snippet.path, start) : null]), pre
-      ]));
+      node.appendChild(el("div", { class: "snippet" }, [el("div", { class: "head" }, [s.snippet.path ? vscodeLink(s.snippet.path, start) : null]), pre]));
     }
 
-    if ((s.tests || []).length) {
-      node.appendChild(el("h3", { text: "Proven by" }));
-      node.appendChild(list(s.tests, function (t) { return linked(t.text, t.path, t.line); }, "points"));
-    }
+    put(node, group("Proven by", list(s.tests, function (t) { return linked(t.text, t.path, t.line); }, "points")));
+
+    var own = caveats.filter(function (c) { return c.section === i + 1; });
+    put(node, group("Caveats", list(own, function (c) { return [c.text]; })));
 
     if (s.review) {
-      var r = s.review, findings = r.findings || [];
-      var badge = function (name, v) { return v ? el("span", { class: "badge " + (v === "ok" ? "ok" : "issue"), text: name + (v === "ok" ? " ✓" : " · " + v) }) : null; };
-      node.appendChild(el("div", { class: "badges" }, [badge("Standards", r.standards), badge("Spec", r.spec)]));
-      if (findings.length) node.appendChild(list(findings, function (f) {
-        return [f.text || "", f.path ? " " : null, f.path ? vscodeLink(f.path, f.line) : null];
-      }, "findings"));
+      var r = s.review, verdict = function (name, v) { return v ? el("span", { class: v === "ok" ? "ok" : "issue", text: name + (v === "ok" ? " ✓" : ": " + v) }) : null; };
+      put(node, group("Code review", el("div", { class: "group" }, [
+        el("div", { class: "review-line" }, [verdict("Standards", r.standards), verdict("Spec", r.spec)]),
+        list(r.findings, function (f) { return linked(f.text, f.path, f.line); }, "points")
+      ])));
     }
     app.appendChild(node);
   });
   updateProgress();
 
-  add(card("side", "Outside the slice's goal", list(data.sideChanges, function (c) { return linked(c.text, c.path, c.line, c.endLine); }, "points")));
-  add(card("decisions", "Decisions", list(data.decisions, function (d) {
+  add(tail("side", "Outside the slice's goal", list(data.sideChanges, function (c) { return linked(c.text, c.path, c.line, c.endLine); }, "points")));
+  add(tail("decisions", "Decisions", list(data.decisions, function (d) {
     return [d.text || ""].concat((d.links || []).map(function (l) { return el("span", null, [" ", el("a", { href: l.href, text: l.label || l.href })]); }));
   })));
-  add(card("verified", "Verified by", list(data.verified, function (t) { return ["✓ ", t]; })));
-  add(card("caveats", "Caveats", list(data.caveats, function (t) { return [t]; }), "callout"));
-  add(card("also", "Also changed", list(data.alsoChanged, function (a) { return linked(a.note, a.path); }, "points")));
-
-  if (data.commitMessage) {
-    var msg = el("pre", { text: data.commitMessage });
-    var btn = el("button", { class: "copy", type: "button", text: "Copy" });
-    btn.addEventListener("click", function () {
-      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1500); };
-      var fallback = function () {
-        var range = document.createRange(); range.selectNodeContents(msg);
-        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-        try { document.execCommand("copy"); done(); } catch (e) {}
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(data.commitMessage).then(done, fallback);
-      else fallback();
-    });
-    add(card("commit", "Suggested commit message", el("div", { class: "commit" }, [msg, btn])));
-  }
+  add(tail("verified", "Verified by", list(data.verified, function (t) { return [t]; })));
+  add(tail("caveats", "Caveats", list(caveats, function (c) {
+    return [c.text, c.section ? el("a", { class: "caveat-ref", href: "#s" + c.section, text: "§" + c.section }) : null];
+  })));
+  add(tail("also", "Also changed", list(data.alsoChanged, function (a) { return linked(a.note, a.path); }, "points")));
+  if (data.commitMessage) add(tail("commit", "Suggested commit message",
+    el("div", { class: "commit" }, [el("pre", { text: data.commitMessage }), copyButton(data.commitMessage)])));
 })();
 </script>
 </body>
