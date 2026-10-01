@@ -21,6 +21,7 @@ Then run `/hq-setup` once on your machine, and `/hq-init` inside each project yo
 | `hq-init` | you, once per project | Interactive questionnaire that sets up or refreshes a project's `project.md`. |
 | `handoff` | you | Writes a dated handoff for the current story so a fresh session can continue. |
 | `pickup` | you | Reads a story's handoff trail and briefs you before resuming. |
+| `review` | you or the agent | When a slice is done, opens an HTML report in your browser: what changed and why, grouped by intent, with VS Code links, diffs, and a suggested commit message. |
 
 ## Workflow
 
@@ -52,8 +53,8 @@ stateDiagram-v2
 | Fresh → Working | `/start` *(planned)* | Begins a new story: sets up its headquarters folder and analyzes the story. |
 | Fresh → Working | `/pickup` | Resumes from the story's handoff trail and briefs you first. |
 | Working → Fresh | `/handoff` | Captures the session so a fresh one can continue with a clear head. |
-| Working → In review | `/review` *(planned)* | Reports what was done and why, linking files and lines. |
+| Working → In review | `/review` | Reports what was done and why, linking files and lines. |
 | In review → Working | you | Course-correct, or commit and move on to the next slice. |
-| Working → Closed | `/finish` *(planned)* | Promotes lessons and writes the story's final record. |
+| Working → Closed | `/finish` *(planned)* | Promotes lessons, writes the story's final record, and produces an outcome report for the team: evidence of what changed, alongside the code review. |
 
 Nothing stores the current state: it's worked out from what's in the story's headquarters folder and from the conversation. These states are separate from your tracker's story statuses, which change only when you ask.

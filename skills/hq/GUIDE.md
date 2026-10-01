@@ -1,6 +1,6 @@
 # Headquarters guide
 
-Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, and handoffs. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`) follows this guide.
+Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, handoffs, and review reports. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`, `review`) follows this guide.
 
 If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it out and suggest `/hq-setup`.
 
@@ -14,8 +14,10 @@ If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it 
     stories/<ID>/
       notes.md                   story-level memory that isn't a handoff
       handoffs/YYYY-MM-DD-HHMM-<slug>.md
+      reviews/YYYY-MM-DD-HHMM-<slug>/index.html   plus assets/ for screenshots
     general/                     work that belongs to no story
       handoffs/...
+      reviews/...
 ```
 
 A project folder can hold more than `project.md` and `stories/`. Add a file or folder when a kind of knowledge outgrows `project.md`, and link it from `project.md`. The layout is meant to grow as the workflow matures.
@@ -65,7 +67,7 @@ When something fits two places, write it once in the more shared place and link 
 
 ## Workflow states
 
-The agentic workflow for a story moves through **fresh → working → in review → closed**. Its transitions are skills: `/pickup` (or a future `/start`) takes fresh to working, `/handoff` takes working back to fresh, and review and finish come later. These states are worked out from what exists in `stories/<ID>/` and from the conversation; nothing stores them.
+The agentic workflow for a story moves through **fresh → working → in review → closed**. Its transitions are skills: `/pickup` (or a future `/start`) takes fresh to working, `/handoff` takes working back to fresh, `/review` takes working to in review, and the user's reply to a review takes it back to working. Finish comes later. These states are worked out from what exists in `stories/<ID>/` and from the conversation; nothing stores them.
 
 They are separate from the project's story statuses (backlog, todo, in-progress, complete). Change a story's status only when the user asks.
 

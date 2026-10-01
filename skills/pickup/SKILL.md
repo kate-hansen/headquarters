@@ -22,8 +22,9 @@ Read, in this order:
 1. **The newest handoff**, in full.
 2. **Earlier handoffs** for the story, from newest to oldest, following `previous:`. Read their TL;DRs and Decisions sections, enough to see how the work arrived here. Stop when they no longer add to the picture.
 3. **The story file** the handoff links.
-4. **`project.md`**, every Related project's `project.md`, and `stories/<ID>/notes.md` if present.
-5. **The current repo state**: `git status`, `git log` since the handoff's `commit:`, and the branch. Compare it with the handoff and note what has moved since (new commits, a different branch, uncommitted changes).
+4. **Reviews** in `reviews/` newer than the newest handoff: read the `report-data` JSON in each one's `index.html`. A review newer than every handoff means the work was waiting on the user's review, so say so in the brief.
+5. **`project.md`**, every Related project's `project.md`, and `stories/<ID>/notes.md` if present.
+6. **The current repo state**: `git status`, `git log` since the handoff's `commit:`, and the branch. Compare it with the handoff and note what has moved since (new commits, a different branch, uncommitted changes).
 
 ## 3. Brief and wait
 
