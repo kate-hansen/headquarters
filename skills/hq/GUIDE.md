@@ -64,7 +64,8 @@ When something fits two places, write it once in the more shared place and link 
 - **Reference over repetition.** Link specs, story files, ADRs, commits, and files by path instead of copying them.
 - **No secrets.** Redact API keys, passwords, tokens, connection strings, and personal information.
 - **Report every write.** After writing to headquarters or a story file, tell the user what changed and where: "Saved to `earthley/project.md`: the build runs from `src/`." When fixing stale memory, call the fix out explicitly with the old and new claim, so the user can course-correct.
-- **Reports stay in headquarters.** Every report (reviews, analyses, any other page written for the user) is a file in the project's headquarters folder, handed to the user by its local path, and kept local even when the harness can publish pages elsewhere.
+- **Reports stay in headquarters.** Every report (reviews, analyses, any other page written for the user) is a file in the project's headquarters folder, kept local even when the harness can publish pages elsewhere.
+- **Hand over pages ready to open.** When a page is written, open it in the default browser (`start "" "<path>"` on Windows, `open` on macOS, `xdg-open` on Linux), and give the user a clickable `file:///` link with the full absolute path and forward slashes (`file:///C:/Users/<you>/.headquarters/<project>/.../index.html`). Terminals open a `file:///` link on Ctrl+click; a `~` path can't be clicked.
 - **The user commits.** Leave all git commits and pushes to the user, who reviews work first.
 
 ## Workflow states
