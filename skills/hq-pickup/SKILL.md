@@ -34,5 +34,6 @@ Give the user:
 - **Where we are**: two or three sentences in plain language.
 - **What changed since the handoff**, if anything.
 - **The first next step** from the handoff, and any open question that blocks it.
+- **A companion skill** when the next step calls for one (see the guide's Companion skills): `mattpocock-skills:research` for an open question, `mattpocock-skills:domain-modeling` for terminology or ADR work, `mattpocock-skills:grilling` to stress-test the plan before building.
 
 Then wait for the user's go-ahead before starting work.

@@ -59,7 +59,7 @@ What each section holds:
 - **Open questions**: what's unresolved, and who or what it waits on.
 - **Next steps**: ordered and concrete; the first one is where the next session starts.
 - **Key files**: paths (with line numbers where useful) and one line on each file's role.
-- **Suggested skills**: skills the next agent should invoke, and when.
+- **Suggested skills**: skills the next agent should invoke, and when — name the companion Matt Pocock skills from the guide where the next step fits one (`mattpocock-skills:research` to settle an open question, `mattpocock-skills:tdd` to build the next slice, `mattpocock-skills:diagnosing-bugs` for a bug left open, `mattpocock-skills:grilling` to stress-test an unsettled plan).
 
 Everything below the TL;DR is written for the next agent: dense, specific, paths over prose. Leave out any section with nothing to say.
 

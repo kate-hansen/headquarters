@@ -77,6 +77,31 @@ deferred until v1 feels right.
 - Add the `hq-dashboard` skill.
 - Prefix the three bare skills (`handoff` / `pickup` / `review`) as `hq-*`.
 
+## Matt Pocock skills
+
+The `mattpocock-skills` plugin is wired in as **companion skills** mapped onto the workflow states — referenced by their `mattpocock-skills:<name>` id, never copied. The mapping:
+
+| State | Companion skills |
+|---|---|
+| Fresh → working (orient/plan) | `research`, `domain-modeling`, `codebase-design`, `grilling` |
+| Working (build) | `tdd`, `prototype`, `diagnosing-bugs` |
+| Working → in review | `code-review` (its Standards/Spec axes feed `/hq-review`'s section `review`) |
+| Any state (utilities) | `resolving-merge-conflicts`, `wizard`, `writing-for-agents` |
+
+Where it's wired:
+
+- `skills/hq/GUIDE.md` — a **Companion skills** subsection after "Workflow states" holds the full mapping (the single source).
+- `hq-pickup` — brief step names `research` / `domain-modeling` / `grilling` at orientation.
+- `hq-handoff` — the handoff's **Suggested skills** section names the fitting companion.
+- `hq-review` — step 5 points at `mattpocock-skills:code-review` as the companion whose two axes map onto the report's `review` fields.
+- `README.md` — workflow section carries a one-line pointer to the guide's mapping.
+
+Deliberately left unmapped: the plugin's other skills (`implement`, `to-spec`, `triage`, `wayfinder`, `handoff`, etc.) — HQ already owns handoff/pickup/review, and the rest don't map cleanly onto a state yet.
+
+## Timesheet + daily reminder
+
+Harvest timesheet is the workflow's **daily close-out** (GUIDE → "Daily close-out"). The timesheet skills — `harvest-timesheet`, `refresh-harvest-projects`, `weekly-harvest-report`, `monthly-harvest-report` — are **[nothingalike/harvest-skills](https://github.com/nothingalike/harvest-skills)**, referenced and credited, not copied into this repo. The reminder layer *is* in this repo: `reminders/harvest-timesheet/` holds `check.sh` (a 3:45pm-ET macOS nudge, at most once per weekday) and its LaunchAgent, with an install README. The reminder only notifies — logging to Harvest always needs the user's confirmation, never unattended.
+
 ## Install footprint (deferred — needs an explicit go)
 
 Not done yet. When greenlit, installing will:
@@ -90,7 +115,10 @@ Nothing is written under any code repo — HQ lives outside them by design.
 ## Status
 
 - [x] Fork created, upstream wired, design doc captured
-- [ ] Adapt skills (`pmt` → Beads, branch handling, `me.md` seed, `review` wiring)
-- [ ] Build `hq-dashboard` v1
-- [ ] Install on the machine (symlinks, `~/.headquarters`, CLAUDE.md append)
+- [x] Adapt skills (`pmt` → Beads, branch handling, `me.md` seed, `hq-review` wiring)
+- [x] Build `hq-dashboard` v1
+- [x] Install on the machine (symlinks, `~/.headquarters`, CLAUDE.md append)
+- [x] Wire Matt Pocock companion skills into the workflow (guide mapping + transition pointers)
+- [x] Bring the Harvest timesheet reminder into the repo; credit nothingalike/harvest-skills
+- [ ] Add a Monday panel to `hq-dashboard` (assigned items, active + recent) — paused mid-build
 - [ ] Retire / archive the Obsidian vault

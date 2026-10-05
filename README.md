@@ -69,3 +69,9 @@ stateDiagram-v2
 | Working → Closed | `/hq-finish` *(planned)* | Promotes lessons, writes the story's final record, and produces an outcome report for the team: evidence of what changed, alongside the code review. |
 
 Nothing stores the current state: it's worked out from what's in the story's headquarters folder and from the conversation. These states are separate from your tracker's story statuses, which change only when you ask.
+
+The `mattpocock-skills` plugin supplies **companion skills** that pair with each state — `research` / `domain-modeling` / `codebase-design` / `grilling` when orienting, `tdd` / `prototype` / `diagnosing-bugs` when building, `code-review` alongside `/hq-review`, plus `resolving-merge-conflicts`, `wizard`, and `writing-for-agents` as utilities. The guide's [Companion skills](skills/hq/GUIDE.md) section maps each one; the transition skills point at the fitting one in context.
+
+## Daily close-out
+
+Separate from the per-story flow, a daily rhythm logs time. A LaunchAgent in [`reminders/harvest-timesheet/`](reminders/harvest-timesheet/) nudges once each weekday afternoon (3:45pm ET) to run `/harvest-timesheet`. The timesheet skills are [nothingalike/harvest-skills](https://github.com/nothingalike/harvest-skills); only the reminder lives here, and every Harvest entry is yours to confirm.

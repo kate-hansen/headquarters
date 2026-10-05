@@ -75,3 +75,16 @@ The agentic workflow for a story moves through **fresh → working → in review
 They are separate from the project's story statuses (backlog, todo, in-progress, complete). Change a story's status only when the user asks.
 
 **Soft guards**: when a transition's preconditions look off (no handoff to pick up, a branch without an ID), say what you noticed and ask whether to continue.
+
+## Companion skills
+
+The `mattpocock-skills` plugin supplies focused skills that pair with these states. Reach for one when its moment arrives, and invoke it by its exact `mattpocock-skills:<name>` id.
+
+- **Fresh → working (orient and plan)**: `mattpocock-skills:research` to settle an open question against primary sources before building; `mattpocock-skills:domain-modeling` when the story reshapes terminology, a `CONTEXT.md`, or an ADR; `mattpocock-skills:codebase-design` when designing a module's interface and seams; `mattpocock-skills:grilling` to stress-test the plan before committing to it.
+- **Working (build)**: `mattpocock-skills:tdd` for the red-green-refactor loop; `mattpocock-skills:prototype` for throwaway code that settles a design question; `mattpocock-skills:diagnosing-bugs` when a hard bug or regression has you stuck.
+- **Working → in review**: `mattpocock-skills:code-review` alongside `/hq-review` — it reviews the diff on the Standards and Spec axes in parallel sub-agents, and its findings feed the review report.
+- **Any state (utilities)**: `mattpocock-skills:resolving-merge-conflicts` for an in-progress merge or rebase; `mattpocock-skills:wizard` for setup steps only a human can do (credentials, CI secrets, a third-party dashboard); `mattpocock-skills:writing-for-agents` when editing a skill, `CLAUDE.md`, or `AGENTS.md`.
+
+## Daily close-out
+
+Separate from any story's workflow, a daily rhythm closes out logged time. A LaunchAgent nudges once each weekday afternoon (3:45pm ET) to log the day in Harvest — the reminder lives in `reminders/harvest-timesheet/` and points at the timesheet skill. Run `/harvest-timesheet` to gather the day's work, compare it against what Harvest already has, and log the rest; `/weekly-harvest-report` and `/monthly-harvest-report` summarise logged time. The timesheet skills are [nothingalike/harvest-skills](https://github.com/nothingalike/harvest-skills); every Harvest entry is the user's to confirm, and nothing writes to Harvest unattended.
