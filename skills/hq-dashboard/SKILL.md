@@ -7,11 +7,11 @@ argument-hint: "[optional: a single project slug to focus on]"
 Read [../hq/GUIDE.md](../hq/GUIDE.md) and [../hq-artifact-design/SKILL.md](../hq-artifact-design/SKILL.md) first.
 
 One page that answers "what needs me right now" across every project, in headquarters' house style. It reads
-live each time; it stores nothing. Start minimal (the three panels below) and add panels only when asked.
+live each time; it stores nothing. Start minimal (the four panels below) and add panels only when asked.
 
 ## 1. Gather the data
 
-Collect three things. A source that errors or is empty yields an empty panel, never a failure.
+Collect four things. A source that errors or is empty yields an empty panel, never a failure.
 
 1. **Projects** — every `~/.headquarters/<slug>/project.md`. For each, take the project name (its `# ` heading)
    and count open stories under `~/.headquarters/<slug>/stories/` that have a newest handoff. With an argument,
@@ -22,6 +22,22 @@ Collect three things. A source that errors or is empty yields an empty panel, ne
 3. **Today's Beads** — in each project repo that has a `.beads/`, run `bd list --json`. Keep open and in-progress
    issues assigned to the user or unassigned; drop gates and templates. Take `id`, `title`, `status`, `priority`,
    `issue_type`. Sort by priority, then status (in-progress first).
+4. **Monday — your open items** — via the Monday MCP (`mcp__monday-mcp__get_board_items_page`), fetch items where
+   you are the **assignee** on each board below. Filter the people column with `compareValue: ["assigned_to_me"]`
+   (the literal string, not a bare user id). Drop only the done/abandoned statuses — `done`, `dev done`,
+   `deployed`, `resolved`, `won't do`, `won't fix`, `closed`, `complete`, `duplicate` (case-insensitive) — and keep
+   every other status (backlog, to do, in progress, blocked, triage, …). Take `name`, `url`, the status text, and
+   `updated_at`; compute a short age. Sort newest-updated first.
+
+   | Board | id | assignee column | status column |
+   |---|---|---|---|
+   | Stories | 9975998815 | `multiple_person_mkvnfxy3` | `task_status` |
+   | a11y Tracker | 18409413937 | `multiple_person_mm2k5d02` | `color_mm2kx6` |
+   | Tracker Bugs Queue | 18420291482 | `multiple_person_mm2txhjz` | `bug_status` |
+   | Tracker Pod subitems | 18420290753 | `person` | `status` |
+
+   The boards don't set Monday's `is_done` flag reliably (some mark `Resolved` as not-done), so filter on the status
+   *text* above, never on `is_done`. There is no recency cut-off — an open item shows however old it is.
 
 ## 2. Build the data block
 
@@ -33,6 +49,7 @@ Shape the data exactly like the `#dashboard-data` example in [template.html](tem
 | `projects[]` | `slug`, `title`, `path` (absolute `project.md`), `openStories`, optional `note` (one line). |
 | `prs[]` | `repo` (`org/name`), `number`, `title`, `url`, `age`. |
 | `beads[]` | `id`, `title`, `status`, `priority`, `type`, optional `repo`. |
+| `monday[]` | `board` (short label), `title`, `url`, `status`, `age`. |
 
 Leave an array empty when a source has nothing; the page hides nothing but shows an empty-state line.
 

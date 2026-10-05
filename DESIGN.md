@@ -120,5 +120,5 @@ Nothing is written under any code repo — HQ lives outside them by design.
 - [x] Install on the machine (symlinks, `~/.headquarters`, CLAUDE.md append)
 - [x] Wire Matt Pocock companion skills into the workflow (guide mapping + transition pointers)
 - [x] Bring the Harvest timesheet reminder into the repo; credit nothingalike/harvest-skills
-- [ ] Add a Monday panel to `hq-dashboard` (assigned items, active + recent) — paused mid-build
+- [x] Add a Monday panel to `hq-dashboard` — your open items (assignee = you, minus Done/Won't-Do, any age), across Stories / a11y / Bugs Queue / Tracker subitems
 - [ ] Retire / archive the Obsidian vault

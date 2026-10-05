@@ -91,6 +91,11 @@
     <ul></ul>
   </section>
 
+  <section id="monday">
+    <div class="sec-head"><h2>Monday — your open items</h2><span class="count" data-count></span></div>
+    <ul></ul>
+  </section>
+
   <section id="beads">
     <div class="sec-head"><h2>Today in Beads</h2><span class="count" data-count></span></div>
     <ul></ul>
@@ -105,6 +110,10 @@
   ],
   "prs": [
     { "repo": "ce-software/recraft", "number": 3340, "title": "Participant RTI module row and coursework drawer", "url": "https://github.com/ce-software/recraft/pull/3340", "age": "2d" }
+  ],
+  "monday": [
+    { "board": "Tracker", "title": "C3 — Participant View: Coursework sheet", "url": "https://craft860026.monday.com/boards/18420290753/pulses/13106063662", "status": "In Progress", "age": "3d" },
+    { "board": "Stories", "title": "Canvas LMS MVP: Mobile UI experience", "url": "https://craft860026.monday.com/boards/9975998815/pulses/12042011857", "status": "Blocked", "age": "3mo" }
   ],
   "beads": [
     { "id": "recraft-fb7", "title": "Swap RTI fake data for the real endpoints once stream A/B land", "status": "open", "priority": "p1", "type": "task", "repo": "recraft" },
@@ -180,6 +189,20 @@
       main.appendChild(el("div", "sub", (pr.repo || "") + " #" + pr.number));
       li.appendChild(main);
       if (pr.age) li.appendChild(chip(pr.age + " old", "num"));
+      return li;
+    });
+
+    fill("monday", data.monday, function (item) {
+      var li = el("li");
+      var main = el("div", "main");
+      var link = el("a", "title", item.title || "(untitled)");
+      link.href = item.url || "#";
+      main.appendChild(link);
+      if (item.board) main.appendChild(el("div", "sub", item.board));
+      li.appendChild(main);
+      var stat = statusChip(item.status);
+      if (stat) li.appendChild(stat);
+      if (item.age) li.appendChild(chip(item.age, "num"));
       return li;
     });
 
