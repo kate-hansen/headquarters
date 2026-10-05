@@ -40,8 +40,9 @@ Collect six things. A source that errors or is empty yields an empty panel, neve
    *text* above, never on `is_done`. There is no recency cut-off — an open item shows however old it is.
 5. **This week** — via the Google Calendar MCP (`mcp__claude_ai_Google_Calendar__list_events`), this work week on
    the user's Craft (`kate.hansen@crafteducation.com`) and Base 2 (`khansen@base2.io`) calendars, Eastern. From
-   today through the week's end; dedupe events on both calendars; drop declined ones. Take title and a short
-   `when` (`Tue · 1:30p`); mark today's events with `today: true`. Sort by start.
+   today through the week's end; dedupe events on both calendars; drop declined ones. **Group events by day**:
+   one entry per day (`day` like `Mon · Oct 5`), each holding its `events` (a `time` like `11:00a` and a `title`).
+   Order days chronologically and events by start time; mark today's day with `today: true`.
 6. **Yesterday's time** — via the Harvest MCP (`mcp__harvest__list_time_entries`) for yesterday — the previous
    **weekday** (Monday–Friday only, skip weekends; on a Monday use Friday), filtered to the user (`user_ids: [3006350]` — she is a Harvest admin, so an unfiltered call returns the whole
    team). Group by project → task with summed `rounded_hours`; keep a day total. If Harvest is not authenticated,
@@ -58,7 +59,7 @@ Shape the data exactly like the `#dashboard-data` example in [template.html](tem
 | `prs[]` | `repo` (`org/name`), `number`, `title`, `url`, `age`. |
 | `beads[]` | `id`, `title`, `status`, `priority`, `type`, optional `repo`. |
 | `monday[]` | `board` (short label), `title`, `url`, `status`, `age`. |
-| `calendar[]` | `title`, `when` (`Tue · 1:30p`), optional `today`. |
+| `calendar[]` | day groups: `day` (`Mon · Oct 5`), optional `today`, and `events[]` of `{ time (11:00a), title }`. |
 | `harvest[]` + `harvestTotal` | each entry `label` (`Project · Task`), `hours`; `harvestTotal` is the day total shown in the header. |
 
 Leave an array empty when a source has nothing; the page hides nothing but shows an empty-state line.

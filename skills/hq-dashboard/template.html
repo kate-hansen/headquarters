@@ -61,9 +61,18 @@
   .chip.bad { background: var(--bad-bg); color: var(--bad); }
   .chip.num { font-family: var(--font-mono); font-weight: 500; }
 
+  #calendar .days { display: grid; gap: 16px; }
+  .day { display: grid; gap: 5px; }
+  .day.today .day-label { color: var(--accent); }
+  .day-label { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .day .evs { display: grid; gap: 6px; }
+  .ev { display: flex; gap: 12px; align-items: baseline; min-width: 0; }
+  .ev .t { font-family: var(--font-mono); font-size: 13px; color: var(--muted); flex: 0 0 auto; width: 6.5ch; text-align: right; font-variant-numeric: tabular-nums; }
+  .ev .title { min-width: 0; overflow-wrap: anywhere; }
+
   @media print {
     button.theme { display: none; }
-    section, li { break-inside: avoid; }
+    section, li, .day { break-inside: avoid; }
     a { color: inherit; }
   }
 </style>
@@ -88,7 +97,7 @@
 
   <section id="calendar">
     <div class="sec-head"><h2>This week</h2><span class="count" data-count></span></div>
-    <ul></ul>
+    <div class="days"></div>
   </section>
 
   <section id="prs">
@@ -119,8 +128,8 @@
     { "slug": "recraft", "title": "ReCraft", "path": "/Users/katehansen/.headquarters/recraft/project.md", "openStories": 2, "note": "RTI participant view in review" }
   ],
   "calendar": [
-    { "title": "Daily Standup (Tracker Team)", "when": "Mon · 11:00a", "today": true },
-    { "title": "Tracker Team Sprint Retrospective", "when": "Thu · 12:00p" }
+    { "day": "Mon · Oct 5", "today": true, "events": [ { "time": "11:00a", "title": "Daily Standup (Tracker Team)" } ] },
+    { "day": "Thu · Oct 8", "events": [ { "time": "12:00p", "title": "Tracker Team Sprint Retrospective" }, { "time": "1:00p", "title": "Base Two Weekly Meeting" } ] }
   ],
   "prs": [
     { "repo": "ce-software/recraft", "number": 3340, "title": "Participant RTI module row and coursework drawer", "url": "https://github.com/ce-software/recraft/pull/3340", "age": "2d" }
@@ -199,15 +208,30 @@
       return li;
     });
 
-    fill("calendar", data.calendar, function (ev) {
-      var li = el("li");
-      var main = el("div", "main");
-      main.appendChild(el("div", "title", ev.title || "(busy)"));
-      if (ev.when) main.appendChild(el("div", "sub", ev.when));
-      li.appendChild(main);
-      if (ev.today) li.appendChild(chip("today", "accent"));
-      return li;
-    });
+    (function () {
+      var section = document.getElementById("calendar");
+      var host = section.querySelector(".days");
+      var count = section.querySelector("[data-count]");
+      var days = data.calendar || [];
+      var total = days.reduce(function (sum, day) { return sum + ((day.events || []).length); }, 0);
+      count.textContent = total ? total : "";
+      if (!total) { host.appendChild(el("div", "empty", "Nothing this week.")); return; }
+      days.forEach(function (day) {
+        var events = day.events || [];
+        if (!events.length) return;
+        var block = el("div", "day" + (day.today ? " today" : ""));
+        block.appendChild(el("div", "day-label", day.day || ""));
+        var list = el("div", "evs");
+        events.forEach(function (ev) {
+          var row = el("div", "ev");
+          row.appendChild(el("span", "t", ev.time || ""));
+          row.appendChild(el("span", "title", ev.title || "(busy)"));
+          list.appendChild(row);
+        });
+        block.appendChild(list);
+        host.appendChild(block);
+      });
+    })();
 
     fill("prs", data.prs, function (pr) {
       var li = el("li");
