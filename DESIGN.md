@@ -123,4 +123,5 @@ Nothing is written under any code repo — HQ lives outside them by design.
 - [x] Add a Monday panel to `hq-dashboard` — your open items (assignee = you, minus Done/Won't-Do, any age), across Stories / a11y / Bugs Queue / Tracker subitems
 - [x] Add `This week` (calendar) and `Yesterday's time` (Harvest) panels to `hq-dashboard`
 - [x] Add `hq-standup` — standup to a dated `~/.headquarters/standups/` note, off the Obsidian vault
+- [x] Add `hq-morning` — one-shot that runs standup + dashboard from a single data pull
 - [x] Retire / archive the Obsidian vault — disabled the `obsidian-sync-catchup` LaunchAgent (renamed `.disabled`, reversible), dropped the audio brief, left a `_ARCHIVED.md` notice in the vault; nothing deleted
