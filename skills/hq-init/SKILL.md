@@ -16,7 +16,7 @@ Then gather everything the environment already knows:
 
 - README, and `CLAUDE.md`/`AGENTS.md`
 - manifests and build files (`package.json`, `*.csproj`, `*.sln`, `pyproject.toml`, `Cargo.toml`, `ProjectSettings/` for Unity, and so on)
-- `.workspace/pm-toolbox.yml`: if present, the repo uses `pmt`. Note its item key and the `project/` path, and add `pm-toolbox` to Related.
+- `.beads/`: if present, the repo tracks work in Beads (`bd`). Note the issue-id prefix (`bd list --json`, read the `id` prefix, e.g. `recraft-`). Work may also live in Monday.
 - `git remote -v` and the default branch
 - `docs/adr/`, if present
 
@@ -28,7 +28,7 @@ Present what you found in a few lines. Then ask, in one numbered round, only the
 2. How do you set it up, run it, and test it? Anything the README gets wrong or leaves out?
 3. What does it depend on: other projects, tools, services, environments? Which of these have their own headquarters folder?
 4. What should every agent know that isn't written down: quirks, gotchas, people to ask, conventions?
-5. Where do stories and work items live, if not in `pmt`?
+5. Where do stories and work items live — Beads, Monday, or somewhere else?
 
 Offer your best guess alongside each question when you have one. Ask a follow-up round only if an answer opens something new.
 
@@ -57,7 +57,7 @@ updated: <YYYY-MM-DD>
 
 ## Stories
 
-<Where they live and the ID key, e.g. "pmt, key TSTL, in project/".>
+<Where they live and the id key, e.g. "Beads, prefix recraft-; some tracked in Monday.">.
 
 ## Things to know
 

@@ -1,5 +1,5 @@
 ---
-name: pickup
+name: hq-pickup
 description: Resume a story in a fresh session from its headquarters handoffs.
 argument-hint: "[story ID]"
 disable-model-invocation: true
@@ -13,7 +13,7 @@ The goal is to understand how the work got here before touching it, then hand th
 
 1. Resolve the project. Resolve the story from the argument or the branch.
 2. With no story resolved (a new day, or a branch without an ID), list the stories under `~/.headquarters/<project-slug>/stories/` that have handoffs, plus `general/`, each with its newest handoff's date and title. Ask which one to pick up.
-3. Soft guard: if the chosen story has no handoffs, say so and ask whether to start from the story file alone.
+3. Soft guard: if the chosen story has no handoffs, say so and ask whether to start from the Beads issue alone.
 
 ## 2. Load the context
 
@@ -21,7 +21,7 @@ Read, in this order:
 
 1. **The newest handoff**, in full.
 2. **Earlier handoffs** for the story, from newest to oldest, following `previous:`. Read their TL;DRs and Decisions sections, enough to see how the work arrived here. Stop when they no longer add to the picture.
-3. **The story file** the handoff links.
+3. **The Beads issue** the handoff links (`bd show <id>`).
 4. **Reviews** in `reviews/` newer than the newest handoff: read the `report-data` JSON in each one's `index.html`. A review newer than every handoff means the work was waiting on the user's review, so say so in the brief.
 5. **Reports** in `reports/` newer than the newest handoff: read each one's opening summary.
 6. **`project.md`**, every Related project's `project.md`, and `stories/<ID>/notes.md` if present.

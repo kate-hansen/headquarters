@@ -1,5 +1,5 @@
 ---
-name: handoff
+name: hq-handoff
 description: Write a handoff to headquarters so a fresh session can pick up this work.
 argument-hint: "[story ID] [context for the next session]"
 disable-model-invocation: true
@@ -13,13 +13,13 @@ A handoff captures this session so a fresh one continues with a clear head, and 
 
 1. Resolve the project and story. The argument may hold a story ID, context for the next session (its focus, a story reference, a goal), or both. Treat any context as the lens for the whole handoff.
 2. Rebuild what actually happened from evidence, not from memory alone. In a git repo, run `git status`, `git log` for this session's commits, and `git diff` (staged and unstaged). Confirm that the key files you plan to cite exist.
-3. Read the story file, if there is one, so the handoff can link to it without repeating it.
+3. Read the Beads issue (`bd show <id>`), if there is one, so the handoff can link to it without repeating it.
 4. Read the previous handoff in the same `handoffs/` folder, if any, so this one continues the trail.
 5. Note any ADRs written during this session.
 
-## 2. Update the story file
+## 2. Update the Beads issue
 
-Apply the audience test from the guide to what this session produced. Write what a teammate needs into the story file: open questions into `## Questions`, plan changes into `## Plan`, a one-line progress row into `## Work History`. Leave the story's status alone. Keep this list of edits for the report.
+Apply the audience test from the guide to what this session produced. Record what a teammate needs on the bead: open questions and plan changes with `bd comment`, a short progress line with `bd note`. Leave the issue's status alone — `bd` state changes only when the user asks. Keep this list of edits for the report.
 
 ## 3. Write the handoff
 
@@ -52,7 +52,7 @@ previous: <filename of the previous handoff, if any>
 
 What each section holds:
 
-- **Working on**: the goal and why it matters, linking the story file.
+- **Working on**: the goal and why it matters, linking the Beads issue.
 - **Accomplished**: what's done, backed by the git evidence (commits, changed files). Separate committed from uncommitted work.
 - **Learned**: lessons as affirmative guidance, each one something the next agent can do or rely on.
 - **Decisions**: "We chose X because Y." Link any ADRs written this session.
@@ -65,4 +65,4 @@ Everything below the TL;DR is written for the next agent: dense, specific, paths
 
 ## 4. Report
 
-Print the TL;DR, the handoff's path, and the list of story-file edits. Mention that `/pickup` resumes from it.
+Print the TL;DR, the handoff's path, and the list of bead edits. Mention that `/hq-pickup` resumes from it.

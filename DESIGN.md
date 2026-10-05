@@ -26,9 +26,14 @@ Seven skills plus a memory root at `~/.headquarters` (outside every code repo):
 | `hq` | recall / remember / update / forget memory; holds the shared `GUIDE.md` |
 | `hq-setup` | once per machine: create `~/.headquarters`, write `me.md`, point agents at it |
 | `hq-init` | once per project: questionnaire → `project.md` |
-| `handoff` / `pickup` | write / read dated session handoffs |
-| `review` | per-slice HTML report, each claim linked to a file:line in VS Code |
+| `hq-handoff` / `hq-pickup` | write / read dated session handoffs |
+| `hq-review` | per-slice HTML report, each claim linked to a file:line in VS Code |
 | `hq-artifact-design` | house style for the HTML reports |
+
+In this fork every skill carries an `hq-` prefix (upstream left `handoff` / `pickup` / `review` bare). This
+avoids colliding with the `handoff` trigger in `orca-cli` / `orchestration` and with the `code-review` family,
+and reads as one `/hq-*` command family. Cost: those renamed files won't auto-merge upstream changes — port
+them by hand on a `git pull upstream main`.
 
 Out of the box there is **no cross-project dashboard** — that's the main thing this fork adds.
 
@@ -39,7 +44,7 @@ Out of the box there is **no cross-project dashboard** — that's the main thing
 | Beads (`bd`) tracker | **Keep** | HQ story resolution rewired to Beads/Monday IDs instead of `pmt` |
 | `.claude/.../memory/` per-fact memory | **Keep** | Stays the recall store; HQ owns `project.md`, handoffs, reviews, dashboard |
 | "Kate owns commit/push" | **Keep** | Already matches HQ's "the user commits" rule |
-| `/code-review` + review-findings mod | **Keep** | HQ `/review` is the narrative HTML layer; wires into `/code-review` |
+| `/code-review` + review-findings mod | **Keep** | HQ `/hq-review` is the narrative HTML layer; wires into `/code-review` |
 | Branch `feat/<slug>` | **Keep, adapt HQ** | HQ assumes a story ID in the branch; relax that, resolve story from Beads/arg |
 | Obsidian vault + `vault-sync` | **Replace** | New `hq-dashboard` skill renders the same data as HQ HTML |
 | Audio daily brief | **Drop** | Removed |
@@ -68,8 +73,9 @@ deferred until v1 feels right.
 
 - `hq-init` + `GUIDE.md`: swap `pmt` story resolution for **Beads / Monday**; drop the branch-must-carry-an-ID assumption.
 - `me.md` seed: commit ownership, report-every-write, `feat/<slug>` naming, "RTFM over the simplest fix".
-- `review`: wire to `/code-review` + the review-findings mod.
+- `hq-review`: wire to `/code-review` + the review-findings mod.
 - Add the `hq-dashboard` skill.
+- Prefix the three bare skills (`handoff` / `pickup` / `review`) as `hq-*`.
 
 ## Install footprint (deferred — needs an explicit go)
 

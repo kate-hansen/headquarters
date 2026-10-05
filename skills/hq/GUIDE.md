@@ -1,6 +1,6 @@
 # Headquarters guide
 
-Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, handoffs, and review reports. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `handoff`, `pickup`, `review`) follows this guide. Pages written for the user to read follow `hq-artifact-design`.
+Headquarters is shared memory for agents and the user, kept outside every code repo at `~/.headquarters` (on Windows, `%USERPROFILE%\.headquarters`). It holds what helps the next session work well: project knowledge, story-level working memory, handoffs, and review reports. Every headquarters skill (`hq`, `hq-setup`, `hq-init`, `hq-handoff`, `hq-pickup`, `hq-review`, `hq-dashboard`) follows this guide. Pages written for the user to read follow `hq-artifact-design`.
 
 If `~/.headquarters/me.md` is missing, the machine hasn't been set up: point it out and suggest `/hq-setup`.
 
@@ -31,26 +31,26 @@ If `~/.headquarters/<project-slug>/project.md` is missing, point it out and sugg
 
 ## Resolving the story
 
-Story IDs look like `<KEY>-NNN` (`TSTL-001`, `BV-006`). Resolve the story in this order:
+A story is a Beads issue (`bd`). IDs look like `<project-slug>-<shortid>` (`recraft-fb7`, `tussle-town-a12`); some work is also tracked in Monday, where IDs are numeric board-item ids. Resolve the story in this order:
 
-1. **Argument**: a story ID the user passed.
-2. **Branch**: the convention is `<type>/<ID>-<slug>` (`feat/TSTL-004-inventory-ui`); match `[A-Z]+-\d{3}` in the branch name.
-3. **Ask** the user. For work tied to no story, use `general/`.
+1. **Argument**: a `bd` id (or Monday id) the user passed.
+2. **Branch**: the convention is `feat/<slug>` and usually carries no id. Only when a branch embeds a `bd` id (`feat/recraft-fb7-...`) match `[a-z0-9]+-[a-z0-9]{3,}` from it.
+3. **`bd` / ask**: run `bd list` to show open issues and ask which one, or ask the user directly. For work tied to no issue, use `general/`.
 
-When the branch doesn't follow the convention, say so plainly so the user can fix it, then use the argument or ask.
+The branch rarely names the story here, so prefer the argument or `bd list` over parsing it.
 
-The story's own file lives in the repo; `project.md` says where. For repos using `pmt`, it is `project/**/stories/**/<ID>-*.md`.
+The story itself lives in Beads, not a repo file: read it with `bd show <id>`, query with `bd list` / `bd query`. Headquarters keys its `stories/<ID>/` folder on that id.
 
 ## Related projects
 
-`project.md` has a **Related** list naming other headquarters projects this one depends on (for example `pm-toolbox` for any repo using `pmt`). When loading a project's memory, also read each Related project's `project.md`.
+`project.md` has a **Related** list naming other headquarters projects this one depends on (a shared library, a sibling service). When loading a project's memory, also read each Related project's `project.md`.
 
 ## Where knowledge goes
 
 Apply the **audience test** first, then the **lifespan test**:
 
 1. **Audience**: would a teammate picking up this story need it, with or without an agent?
-   - Yes → the **story file** in the repo: decisions that change the plan, open questions, scope changes, progress in Work History, references. Edit the Markdown directly.
+   - Yes → the **Beads issue**: decisions that change the plan, open questions, scope changes, progress. Record them on the bead with `bd comment` / `bd note` / `bd update`.
    - No → **headquarters**: handoffs, session context, how-to-work-here lessons, notes that are noise to a teammate.
 2. **Lifespan**: does it outlive the story and describe the code?
    - Facts the repo needs to build, run, or be understood (a build quirk, an architectural decision) → the **repo**: its docs, `CLAUDE.md`/`AGENTS.md`, or an ADR.
@@ -70,7 +70,7 @@ When something fits two places, write it once in the more shared place and link 
 
 ## Workflow states
 
-The agentic workflow for a story moves through **fresh → working → in review → closed**. Its transitions are skills: `/pickup` (or a future `/start`) takes fresh to working, `/handoff` takes working back to fresh, `/review` takes working to in review, and the user's reply to a review takes it back to working. Finish comes later. These states are worked out from what exists in `stories/<ID>/` and from the conversation; nothing stores them.
+The agentic workflow for a story moves through **fresh → working → in review → closed**. Its transitions are skills: `/hq-pickup` (or a future `/hq-start`) takes fresh to working, `/hq-handoff` takes working back to fresh, `/hq-review` takes working to in review, and the user's reply to a review takes it back to working. Finish comes later. These states are worked out from what exists in `stories/<ID>/` and from the conversation; nothing stores them.
 
 They are separate from the project's story statuses (backlog, todo, in-progress, complete). Change a story's status only when the user asks.
 

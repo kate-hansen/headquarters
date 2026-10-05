@@ -1,5 +1,5 @@
 ---
-name: review
+name: hq-review
 description: Explain a finished slice of work to the user before they commit, as an HTML report with what changed, why, and links to each file and line. Use when a slice of work is ready for the user to review before committing, or when the user asks what was done or why.
 argument-hint: "[scope, e.g. 'since main' or 'last 3 commits']"
 ---
@@ -41,7 +41,7 @@ The page derives state chips from this data: *look closely* from `attention`, *u
 
 ## 3. Update the story file and headquarters
 
-Apply the audience test from the guide, the same way `/handoff` does: open questions and plan changes go into the story file, and lessons go to headquarters. Leave the story's status alone. Every edit, including any stale-memory fix (old claim → new claim), goes in the report's `alsoChanged` section.
+Apply the audience test from the guide, the same way `/hq-handoff` does: open questions and plan changes go onto the Beads issue (`bd comment` / `bd note`), and lessons go to headquarters. Leave the story's status alone. Every edit, including any stale-memory fix (old claim → new claim), goes in the report's `alsoChanged` section.
 
 ## 4. Write the report
 
@@ -74,5 +74,5 @@ Leave a field out or an array empty when there's nothing for it. The page hides 
 
 1. Hand over `index.html` the way the guide describes: open it in the default browser and give its clickable `file:///` link.
 2. In chat, give the summary in two or three lines with that link.
-3. When the change is large or risky (many files, or anything touching auth, data, migrations, or a public interface), offer to run `/code-review` as well. Its results go into this same report: set each section's `review` (`standards` and `spec` as `"ok"` or a short verdict, plus `findings[]` with `text`, `path`, `line`), update the data block, and reopen the page.
+3. When the change is large or risky (many files, or anything touching auth, data, migrations, or a public interface), run `/code-review` as well — Kate's default is medium — then `/unslop` the findings. Order them blocker → high → medium → minor and drop nits. Its results go into this same report: set each section's `review` (`standards` and `spec` as `"ok"` or a short verdict, plus `findings[]` with `text`, `path`, `line`), update the data block, and reopen the page.
 4. Wait. The user's reply decides what happens next: requested changes send the work back to working, and "committed" starts the next slice. The user makes every commit.
