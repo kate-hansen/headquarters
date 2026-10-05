@@ -1,5 +1,8 @@
 # Headquarters
 
+> **Kate's fork** of [nothingalike/headquarters](https://github.com/nothingalike/headquarters) — all credit to
+> nothingalike for the system. Adaptation plan: **[DESIGN.md](DESIGN.md)**. Upstream's original README follows.
+
 Shared memory and workflow skills for agentic programming. Agents keep project knowledge, story-level working memory, and handoffs in `~/.headquarters`, outside every code repo, so any agent (Claude Code, Codex, ...) can pick up where another left off.
 
 ## Install
