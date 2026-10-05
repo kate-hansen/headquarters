@@ -11,8 +11,9 @@ vault (this replaces the old vault-based `standup` skill). It produces a dated n
 
 ## 1. Gather (default date = today, local)
 
-- **Yesterday** (the last working day; on a Monday or after PTO, the previous workday — note intervening PTO):
-  Monday items you moved to a done status, Beads issues you closed, and PRs you merged.
+- **Yesterday** = the previous **weekday** (Monday–Friday only; never a weekend). On a Monday, yesterday is
+  Friday; after PTO, the last worked weekday — note intervening PTO. Covers: Monday items you moved to a done
+  status, Beads issues you closed, and PRs you merged.
 - **Today**: in-progress Beads and Monday items, plus today's calendar (Craft `kate.hansen@crafteducation.com` +
   Base 2 `khansen@base2.io`, Eastern) for context.
 - **Blockers**: Blocked Monday items, Beads marked blocked or deferred, and open questions from the newest handoff.

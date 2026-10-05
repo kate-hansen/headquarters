@@ -42,8 +42,8 @@ Collect six things. A source that errors or is empty yields an empty panel, neve
    the user's Craft (`kate.hansen@crafteducation.com`) and Base 2 (`khansen@base2.io`) calendars, Eastern. From
    today through the week's end; dedupe events on both calendars; drop declined ones. Take title and a short
    `when` (`Tue · 1:30p`); mark today's events with `today: true`. Sort by start.
-6. **Yesterday's time** — via the Harvest MCP (`mcp__harvest__list_time_entries`) for yesterday's local date,
-   filtered to the user (`user_ids: [3006350]` — she is a Harvest admin, so an unfiltered call returns the whole
+6. **Yesterday's time** — via the Harvest MCP (`mcp__harvest__list_time_entries`) for yesterday — the previous
+   **weekday** (Monday–Friday only, skip weekends; on a Monday use Friday), filtered to the user (`user_ids: [3006350]` — she is a Harvest admin, so an unfiltered call returns the whole
    team). Group by project → task with summed `rounded_hours`; keep a day total. If Harvest is not authenticated,
    the panel is empty — offer `mcp__harvest__authenticate`.
 
