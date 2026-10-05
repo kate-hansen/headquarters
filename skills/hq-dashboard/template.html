@@ -86,6 +86,11 @@
     <ul></ul>
   </section>
 
+  <section id="calendar">
+    <div class="sec-head"><h2>This week</h2><span class="count" data-count></span></div>
+    <ul></ul>
+  </section>
+
   <section id="prs">
     <div class="sec-head"><h2>Awaiting your review</h2><span class="count" data-count></span></div>
     <ul></ul>
@@ -100,6 +105,11 @@
     <div class="sec-head"><h2>Today in Beads</h2><span class="count" data-count></span></div>
     <ul></ul>
   </section>
+
+  <section id="harvest">
+    <div class="sec-head"><h2>Yesterday's time</h2><span class="count" data-count></span></div>
+    <ul></ul>
+  </section>
 </main>
 
 <script type="application/json" id="dashboard-data">
@@ -107,6 +117,10 @@
   "generated": "2026-10-05 14:30",
   "projects": [
     { "slug": "recraft", "title": "ReCraft", "path": "/Users/katehansen/.headquarters/recraft/project.md", "openStories": 2, "note": "RTI participant view in review" }
+  ],
+  "calendar": [
+    { "title": "Daily Standup (Tracker Team)", "when": "Mon · 11:00a", "today": true },
+    { "title": "Tracker Team Sprint Retrospective", "when": "Thu · 12:00p" }
   ],
   "prs": [
     { "repo": "ce-software/recraft", "number": 3340, "title": "Participant RTI module row and coursework drawer", "url": "https://github.com/ce-software/recraft/pull/3340", "age": "2d" }
@@ -118,7 +132,12 @@
   "beads": [
     { "id": "recraft-fb7", "title": "Swap RTI fake data for the real endpoints once stream A/B land", "status": "open", "priority": "p1", "type": "task", "repo": "recraft" },
     { "id": "recraft-a12", "title": "Hours conversion before epic close", "status": "in_progress", "priority": "p0", "type": "task", "repo": "recraft" }
-  ]
+  ],
+  "harvest": [
+    { "label": "ReCraft · Development", "hours": 6.5 },
+    { "label": "Internal · Meetings", "hours": 1.5 }
+  ],
+  "harvestTotal": 8
 }
 </script>
 <script>
@@ -180,6 +199,16 @@
       return li;
     });
 
+    fill("calendar", data.calendar, function (ev) {
+      var li = el("li");
+      var main = el("div", "main");
+      main.appendChild(el("div", "title", ev.title || "(busy)"));
+      if (ev.when) main.appendChild(el("div", "sub", ev.when));
+      li.appendChild(main);
+      if (ev.today) li.appendChild(chip("today", "accent"));
+      return li;
+    });
+
     fill("prs", data.prs, function (pr) {
       var li = el("li");
       var main = el("div", "main");
@@ -218,6 +247,17 @@
       if (stat) li.appendChild(stat);
       return li;
     });
+
+    fill("harvest", data.harvest, function (entry) {
+      var li = el("li");
+      li.appendChild(el("div", "main", entry.label || ""));
+      if (entry.hours != null) li.appendChild(chip(entry.hours + "h", "num"));
+      return li;
+    });
+    if (data.harvestTotal != null) {
+      var harvestCount = document.querySelector("#harvest [data-count]");
+      if (harvestCount) harvestCount.textContent = data.harvestTotal + "h";
+    }
 
     var toggle = document.querySelector("button.theme");
     if (toggle) toggle.addEventListener("click", function () {

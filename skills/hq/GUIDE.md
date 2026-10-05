@@ -87,4 +87,7 @@ The `mattpocock-skills` plugin supplies focused skills that pair with these stat
 
 ## Daily close-out
 
-Separate from any story's workflow, a daily rhythm closes out logged time. A LaunchAgent nudges once each weekday afternoon (3:45pm ET) to log the day in Harvest — the reminder lives in `reminders/harvest-timesheet/` and points at the timesheet skill. Run `/harvest-timesheet` to gather the day's work, compare it against what Harvest already has, and log the rest; `/weekly-harvest-report` and `/monthly-harvest-report` summarise logged time. The timesheet skills are [nothingalike/harvest-skills](https://github.com/nothingalike/harvest-skills); every Harvest entry is the user's to confirm, and nothing writes to Harvest unattended.
+Separate from any story's workflow, a daily rhythm runs the day. `/hq-dashboard` is the live surface — this
+week's calendar, PRs awaiting review, open Monday items, Beads, and yesterday's Harvest time — replacing the
+retired Obsidian vault. `/hq-standup` writes the day's standup to `~/.headquarters/standups/`. And it closes out
+logged time: A LaunchAgent nudges once each weekday afternoon (3:45pm ET) to log the day in Harvest — the reminder lives in `reminders/harvest-timesheet/` and points at the timesheet skill. Run `/harvest-timesheet` to gather the day's work, compare it against what Harvest already has, and log the rest; `/weekly-harvest-report` and `/monthly-harvest-report` summarise logged time. The timesheet skills are [nothingalike/harvest-skills](https://github.com/nothingalike/harvest-skills); every Harvest entry is the user's to confirm, and nothing writes to Harvest unattended.

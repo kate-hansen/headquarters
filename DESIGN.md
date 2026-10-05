@@ -121,4 +121,6 @@ Nothing is written under any code repo — HQ lives outside them by design.
 - [x] Wire Matt Pocock companion skills into the workflow (guide mapping + transition pointers)
 - [x] Bring the Harvest timesheet reminder into the repo; credit nothingalike/harvest-skills
 - [x] Add a Monday panel to `hq-dashboard` — your open items (assignee = you, minus Done/Won't-Do, any age), across Stories / a11y / Bugs Queue / Tracker subitems
-- [ ] Retire / archive the Obsidian vault
+- [x] Add `This week` (calendar) and `Yesterday's time` (Harvest) panels to `hq-dashboard`
+- [x] Add `hq-standup` — standup to a dated `~/.headquarters/standups/` note, off the Obsidian vault
+- [x] Retire / archive the Obsidian vault — disabled the `obsidian-sync-catchup` LaunchAgent (renamed `.disabled`, reversible), dropped the audio brief, left a `_ARCHIVED.md` notice in the vault; nothing deleted
